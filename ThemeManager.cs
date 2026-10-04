@@ -17,6 +17,7 @@ public static class ThemeManager
 
     public static void Init()
     {
+        _override = AppSettings.Current.Dark; // сохранённый выбор пользователя
         SystemEvents.UserPreferenceChanged += (_, e) =>
         {
             if (e.Category is UserPreferenceCategory.General
@@ -33,6 +34,8 @@ public static class ThemeManager
     public static void Toggle()
     {
         _override = !IsDark;
+        AppSettings.Current.Dark = _override;
+        AppSettings.Save();
         Refresh();
     }
 

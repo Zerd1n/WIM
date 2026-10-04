@@ -4,24 +4,31 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 
-        <!-- Палитра Fluent (светлая тема) -->
+        <!-- Значения по умолчанию (светлая тема).
+             Во время работы их подменяет ThemeManager: тема + акцентный цвет системы. -->
         <SolidColorBrush x:Key="Accent" Color="#0F6CBD"/>
         <SolidColorBrush x:Key="AccentHover" Color="#115EA3"/>
         <SolidColorBrush x:Key="AccentPressed" Color="#0F548C"/>
+        <SolidColorBrush x:Key="OnAccent" Color="White"/>
         <SolidColorBrush x:Key="CardBrush" Color="#B3FFFFFF"/>
+        <SolidColorBrush x:Key="FieldBrush" Color="#B3FFFFFF"/>
         <SolidColorBrush x:Key="StrokeBrush" Color="#1A000000"/>
         <SolidColorBrush x:Key="TextPrimary" Color="#1A1A1A"/>
         <SolidColorBrush x:Key="TextSecondary" Color="#616161"/>
         <SolidColorBrush x:Key="SubtleHover" Color="#0F000000"/>
         <SolidColorBrush x:Key="SubtlePressed" Color="#1A000000"/>
+        <SolidColorBrush x:Key="DisabledBg" Color="#14000000"/>
+        <SolidColorBrush x:Key="DisabledFg" Color="#5C000000"/>
+        <SolidColorBrush x:Key="PlaceholderGlyph" Color="#26000000"/>
+        <SolidColorBrush x:Key="SolidBg" Color="#F3F3F3"/>
 
-        <FontFamily x:Key="UiFont">Segoe UI Variable Text, Segoe UI</FontFamily>
+        <FontFamily x:Key="UiFont">Segoe UI</FontFamily>
         <FontFamily x:Key="IconFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
 
         <!-- Акцентная кнопка -->
         <Style x:Key="AccentButton" TargetType="Button">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="{StaticResource Accent}"/>
+            <Setter Property="Foreground" Value="{DynamicResource OnAccent}"/>
+            <Setter Property="Background" Value="{DynamicResource Accent}"/>
             <Setter Property="FontFamily" Value="{StaticResource UiFont}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -37,14 +44,14 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource AccentHover}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentHover}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource AccentPressed}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentPressed}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="Bd" Property="Background" Value="#14000000"/>
-                                <Setter Property="Foreground" Value="#5C000000"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource DisabledBg}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource DisabledFg}"/>
                                 <Setter Property="Cursor" Value="Arrow"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -55,7 +62,7 @@
 
         <!-- «Тихая» кнопка (прозрачная, подсвечивается при наведении) -->
         <Style x:Key="SubtleButton" TargetType="Button">
-            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="FontFamily" Value="{StaticResource UiFont}"/>
             <Setter Property="FontSize" Value="13"/>
@@ -67,14 +74,14 @@
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="Bd" Background="{TemplateBinding Background}"
                                 CornerRadius="4" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource SubtleHover}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SubtleHover}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource SubtlePressed}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource SubtlePressed}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" Value="0.35"/>
@@ -90,23 +97,26 @@
         <Style x:Key="FluentTextBox" TargetType="TextBox">
             <Setter Property="FontFamily" Value="{StaticResource UiFont}"/>
             <Setter Property="FontSize" Value="15"/>
-            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
-            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="CaretBrush" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="Padding" Value="0"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
                         <Grid>
-                            <Border Background="#B3FFFFFF" BorderBrush="{StaticResource StrokeBrush}"
+                            <Border Background="{DynamicResource FieldBrush}"
+                                    BorderBrush="{DynamicResource StrokeBrush}"
                                     BorderThickness="1" CornerRadius="4"/>
                             <Border x:Name="FocusLine" Height="2" VerticalAlignment="Bottom"
-                                    Background="{StaticResource Accent}" CornerRadius="0,0,4,4"
+                                    Background="{DynamicResource Accent}" CornerRadius="0,0,4,4"
                                     Margin="1,0,1,0" Visibility="Collapsed"/>
-                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}"
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="12,0,12,0"
                                           VerticalAlignment="Center" Focusable="False"/>
                             <TextBlock x:Name="Hint" Text="{TemplateBinding Tag}" IsHitTestVisible="False"
-                                       Foreground="{StaticResource TextSecondary}" Margin="{TemplateBinding Padding}"
+                                       Foreground="{DynamicResource TextSecondary}"
+                                       Margin="14,0,12,0"
                                        VerticalAlignment="Center" Visibility="Collapsed"/>
                         </Grid>
                         <ControlTemplate.Triggers>
